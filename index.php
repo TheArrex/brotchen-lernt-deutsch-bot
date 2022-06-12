@@ -1,6 +1,11 @@
 <?php
 include('vendor/autoload.php'); //Подключаем библиотеку
 use Telegram\Bot\Api;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
+$log = new Logger('name');
+$log->pushHandler(new StreamHandler('php://stderr', Logger::WARNING));
 
 $telegram = new Api('5578497960:AAERCgsXvpUoyDRSfhJ7tO_2WZ2CL3NVXDE'); //Устанавливаем токен, полученный у BotFather
 $result = $telegram->getWebhookUpdates(); //Передаем в переменную $result полную информацию о сообщении пользователя
@@ -18,7 +23,7 @@ if ($text) {
         if ($html) {
             $reply = $html->sectionlist->section[0]->entry[0]->side[0]->repr->small->i->m->t;
             if ($reply) {
-                echo $reply;
+                $log->info($reply);
 //                $telegram->sendMessage([ 'chat_id' => $chat_id, 'parse_mode' => 'HTML', 'disable_web_page_preview' => true, 'text' => $reply ]);
             }
         }
