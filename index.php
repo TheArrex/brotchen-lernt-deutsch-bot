@@ -14,11 +14,7 @@ if ($text) {
         $reply = "Просто введи слово на немецком";
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply ]);
     } else {
-        $reply = '';
-        $html=simplexml_load_file('https://dict.leo.org/dictQuery/m-vocab/rude/query.xml?lp=rude&lang=ru&search=' . $text . '&side=both&order=basic&partial=show&sectLenMax=16&n=1&filtered=-1&trigger=');
-//        foreach ($html->channel->item as $item) {
-//            $reply .= "\xE2\x9E\xA1 ".$item->title." (<a href='".$item->link."'>читать</a>)\n";
-//        }
+        $html = simplexml_load_file('https://dict.leo.org/dictQuery/m-vocab/rude/query.xml?lp=rude&lang=ru&search=' . $text . '&side=both&order=basic&partial=show&sectLenMax=16&n=1&filtered=-1&trigger=');
         $reply = $html->sectionlist->section[0]->entry[0]->side[0]->repr->small->i->m->t;
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'parse_mode' => 'HTML', 'disable_web_page_preview' => true, 'text' => $reply ]);
     }
