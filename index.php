@@ -4,8 +4,6 @@ use Telegram\Bot\Api;
 
 $telegram = new Api('5578497960:AAERCgsXvpUoyDRSfhJ7tO_2WZ2CL3NVXDE'); //Устанавливаем токен, полученный у BotFather
 $result = $telegram->getWebhookUpdates(); //Передаем в переменную $result полную информацию о сообщении пользователя
-var_dump($result);
-die();
 
 $text = $result["message"]["text"]; //Текст сообщения
 $chat_id = $result["message"]["chat"]["id"]; //Уникальный идентификатор пользователя
