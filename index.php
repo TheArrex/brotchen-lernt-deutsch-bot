@@ -9,6 +9,8 @@ $text = $result["message"]["text"]; //Текст сообщения
 $chat_id = $result["message"]["chat"]["id"]; //Уникальный идентификатор пользователя
 $name = $result["message"]["from"]["username"]; //Юзернейм пользователя
 
+$telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $text ]);
+
 if ($text) {
     if ($text == "/start") {
         $reply = "Просто введи слово на немецком";
