@@ -34,30 +34,32 @@ if ($text) {
                     $reply = '';
                     $entryAttributes = $entry->side[0]->ibox->flecttab->attributes();
 
-                    foreach ($entry->side[0]->words->word as $word) {
-                        $reply .= "<b>" . $word . "</b>\n\n";
+                    if ($entryAttributes) {
+                        foreach ($entry->side[0]->words->word as $word) {
+                            $reply .= "<b>" . $word . "</b>\n\n";
 
-                        switch ($entryAttributes->stemType->__toString()) {
-                            case 'noun':
-                                if ($word->attributes()->implicit_mf) {
-                                    $reply .= "Род: " . $genders[$word->attributes()->implicit_mf->__toString()] . "\n\n";
-                                } else {
-                                    $reply .= "Грамматическое число: " . $entry->side[0]->repr->small->i->m->t . "\n\n";
-                                }
-                                break;
-                            case 'verb':
-                                $stemming = simplexml_load_file('https://dict.leo.org/dictQuery/m-vocab/rude/stemming.xml' . $entryAttributes->url->__toString() . '&onlyLoc=result');
-
-                                if ($stemming) {
-                                    foreach ($stemming->verbtab->mood[0]->tense[0]->case as $case) {
-                                        $reply .= $case->verb->__toString();
+                            switch ($entryAttributes->stemType->__toString()) {
+                                case 'noun':
+                                    if ($word->attributes()->implicit_mf) {
+                                        $reply .= "Род: " . $genders[$word->attributes()->implicit_mf->__toString()] . "\n\n";
+                                    } else {
+                                        $reply .= "Грамматическое число: " . $entry->side[0]->repr->small->i->m->t . "\n\n";
                                     }
-                                }
-                                break;
-                        }
-                    }
+                                    break;
+                                case 'verb':
+                                    $stemming = simplexml_load_file('https://dict.leo.org/dictQuery/m-vocab/rude/stemming.xml' . $entryAttributes->url->__toString() . '&onlyLoc=result');
 
-                    $telegram->sendMessage([ 'chat_id' => $chat_id, 'parse_mode' => 'HTML', 'text' => $reply ]);
+                                    if ($stemming) {
+                                        foreach ($stemming->verbtab->mood[0]->tense[0]->case as $case) {
+                                            $reply .= $case->verb->__toString();
+                                        }
+                                    }
+                                    break;
+                            }
+                        }
+
+                        $telegram->sendMessage([ 'chat_id' => $chat_id, 'parse_mode' => 'HTML', 'text' => $reply ]);
+                    }
                 }
             } else {
                 $telegram->sendMessage([ 'chat_id' => $chat_id, 'parse_mode' => 'HTML', 'text' => 'Булочка, ты опечаталась' ]);
