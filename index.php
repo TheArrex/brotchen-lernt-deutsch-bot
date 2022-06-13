@@ -22,20 +22,24 @@ if ($text) {
         $reply = '';
         $html = simplexml_load_file('https://dict.leo.org/dictQuery/m-vocab/rude/query.xml?lp=rude&lang=ru&search=' . $text . '&side=both&order=basic&partial=show&sectLenMax=16&n=1&filtered=-1&trigger=');
         if ($html) {
-            $n = $html->sectionlist->section[0]->entry[0]->side[0]->repr->small->i->m->t;
-            foreach ($html->sectionlist->section[0]->entry[0]->side[0]->words->word as $word) {
-                $reply .= "<b>" . $word . "</b>\n\n";
+            if ($html->sectionlist->section[0]) {
+                $n = $html->sectionlist->section[0]->entry[0]->side[0]->repr->small->i->m->t;
+                foreach ($html->sectionlist->section[0]->entry[0]->side[0]->words->word as $word) {
+                    $reply .= "<b>" . $word . "</b>\n\n";
 
-                if ($word->attributes()->implicit_mf) {
-                    $reply .= "Род: " . $word->attributes()->implicit_mf . "\n\n";
-                } else {
-                    $reply .= 'Грамматическое число: ' . $n;
+                    if ($word->attributes()->implicit_mf) {
+                        $reply .= "Род: " . $word->attributes()->implicit_mf . "\n\n";
+                    } else {
+                        $reply .= 'Грамматическое число: ' . $n;
+                    }
                 }
-            }
 
 //            if ($n->attributes()->n == 'grm_pl') {
 //
 //            }
+            } else {
+                $reply .= 'Булочка, ты опечаталась';
+            }
 
             $telegram->sendMessage([ 'chat_id' => $chat_id, 'parse_mode' => 'HTML', 'text' => $reply ]);
         }
