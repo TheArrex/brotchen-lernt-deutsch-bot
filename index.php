@@ -31,7 +31,7 @@ if ($text) {
                 $i = 1;
                 foreach ($section->entry as $entry) {
                     $reply = '';
-                    $entryAttributes = $entry->side[0]->ibox->flecttab->attributes();
+                    $entryAttributes = $entry->side[1]->ibox->flecttab->attributes();
 
                     if ($entryAttributes) {
                         if ($i++ > 3) break;
@@ -47,7 +47,6 @@ if ($text) {
                                     }
                                     break;
                                 case 'verb':
-                                    $reply .= $entryAttributes->url;
                                     $stemming = simplexml_load_file('https://dict.leo.org/dictQuery/m-vocab/rude/stemming.xml' . $entryAttributes->url . '&onlyLoc=result');
 
                                     if ($stemming) {
