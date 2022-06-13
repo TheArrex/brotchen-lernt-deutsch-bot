@@ -31,7 +31,6 @@ if ($text) {
 
             if ($section) {
                 $i = 1;
-
                 foreach ($section->entry as $entry) {
                     $entryAttributes = $entry->side[1]->ibox->flecttab->attributes();
 
@@ -63,7 +62,7 @@ if ($text) {
                     }
                 }
             } else {
-                $telegram->sendMessage([ 'chat_id' => $chat_id, 'parse_mode' => 'HTML', 'text' => 'Булочка, ты опечаталась' ]);
+                $reply = 'Булочка, ты опечаталась';
             }
 
             $telegram->sendMessage([ 'chat_id' => $chat_id, 'parse_mode' => 'HTML', 'text' => $reply ]);
