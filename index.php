@@ -47,6 +47,7 @@ if ($text) {
                                     }
                                     break;
                                 case 'verb':
+                                    $reply .= $entryAttributes->url;
                                     $stemming = simplexml_load_file('https://dict.leo.org/dictQuery/m-vocab/rude/stemming.xml' . $entryAttributes->url . '&onlyLoc=result');
 
                                     if ($stemming) {
