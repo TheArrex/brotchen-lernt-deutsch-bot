@@ -34,7 +34,7 @@ if ($text) {
                         $reply .= "<b>" . $word . "</b>\n\n";
 
                         if ($word->attributes()->implicit_mf) {
-                            $reply .= "Род: " . $genders[$word->attributes()->implicit_mf] . "\n\n";
+                            $reply .= "Род: " . $genders[$word->attributes()->implicit_mf->__toString()] . "\n\n";
                         } else {
                             $reply .= 'Грамматическое число: ' . $n;
                         }
