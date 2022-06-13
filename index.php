@@ -24,12 +24,14 @@ if ($text) {
         $reply = "Просто введи слово на немецком";
         $telegram->sendMessage([ 'chat_id' => $chat_id, 'text' => $reply ]);
     } else {
-        $reply = '';
         $html = simplexml_load_file('https://dict.leo.org/dictQuery/m-vocab/rude/query.xml?lp=rude&lang=ru&search=' . $text . '&side=both&order=basic&partial=show&sectLenMax=16&n=1&filtered=-1&trigger=');
         if ($html) {
             $section = $html->sectionlist->section[0];
             if ($section) {
-                foreach ($section->entry as $entry) {
+                foreach ($section->entry as $i => $entry) {
+                    $reply = '';
+                    if ($i > 2) break;
+
                     $n = $entry->side[0]->repr->small->i->m->t;
                     foreach ($entry->side[0]->words->word as $word) {
                         $reply .= "<b>" . $word . "</b>\n\n";
@@ -40,12 +42,12 @@ if ($text) {
                             $reply .= "Грамматическое число: " . $n . "\n\n";
                         }
                     }
+
+                    $telegram->sendMessage([ 'chat_id' => $chat_id, 'parse_mode' => 'HTML', 'text' => $reply ]);
                 }
             } else {
-                $reply .= 'Булочка, ты опечаталась';
+                $telegram->sendMessage([ 'chat_id' => $chat_id, 'parse_mode' => 'HTML', 'text' => 'Булочка, ты опечаталась' ]);
             }
-
-            $telegram->sendMessage([ 'chat_id' => $chat_id, 'parse_mode' => 'HTML', 'text' => $reply ]);
 
             if ($section) {
                 $fileName = $section->entry[1]->side[1]->ibox->pron->attributes()->url;
