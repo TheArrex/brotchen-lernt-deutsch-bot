@@ -39,18 +39,21 @@ if ($text) {
                         switch ($entryAttributes->stemType->__toString()) {
                             case 'noun':
                                 foreach ($entry->side[0]->words->word as $word) {
-                                    $reply .= "<b>" . $word . "</b>\n\n";
+                                    $reply .= "<b>" . $word . "</b>\n";
 
                                     if ($word->attributes()->implicit_mf) {
-                                        $reply .= "Род: " . $genders[$word->attributes()->implicit_mf->__toString()] . "\n\n";
+                                        $reply .= "род: " . $genders[$word->attributes()->implicit_mf->__toString()] . "\n\n";
                                     } else {
-                                        $reply .= "Грамматическое число: " . $entry->side[0]->repr->small->i->m->t . "\n\n";
+                                        $reply .= "грамматическое число: " . $entry->side[0]->repr->small->i->m->t . "\n\n";
                                     }
                                 }
                                 break;
                             case 'verb':
-                                foreach ($entry->side[0]->words->word as $word) {
-                                    $reply .= "<b>" . $word . "</b> / ";
+                                foreach ($entry->side[0]->words->word as $key => $word) {
+                                    $reply .= "<b>" . $word . "</b>";
+                                    if ($key === array_key_last($entry->side[0]->words->word)) {
+                                        $reply .= " / ";
+                                    }
                                 }
                                 $reply .= "\n";
                                 break;
@@ -62,6 +65,7 @@ if ($text) {
                     $stemming = simplexml_load_file('https://dict.leo.org/dictQuery/m-vocab/rude/stemming.xml' . $section->entry[0]->side[1]->ibox->flecttab->attributes()->url . '&onlyLoc=result');
 
                     if ($stemming) {
+                        $reply .= "\n";
                         foreach ($stemming->verbtab->mood[0]->tense[0]->case as $case) {
                             $reply .= $case->verb->fix[0] . $case->verb->var . "\n";
                         }
