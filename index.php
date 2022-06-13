@@ -74,7 +74,7 @@ function getIndikativ($url) {
     $html = simplexml_load_file('https://dict.leo.org/dictQuery/m-vocab/rude/stemming.xml' . $url . '&onlyLoc=result');
 
     if ($html) {
-        foreach ($html->flectiontable->verbtab->mood[0]->tense[0]->case as $case) {
+        foreach ($html->verbtab->mood[0]->tense[0]->case as $case) {
             $result = $case->verb->__toString();
         }
     }
