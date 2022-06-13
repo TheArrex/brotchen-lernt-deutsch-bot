@@ -30,7 +30,6 @@ if ($text) {
             if ($section) {
                 foreach ($section->entry as $i => $entry) {
                     $reply = '';
-                    if ($i > 2) break;
 
                     $n = $entry->side[0]->repr->small->i->m->t;
                     foreach ($entry->side[0]->words->word as $word) {
