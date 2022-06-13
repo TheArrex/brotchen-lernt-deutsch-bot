@@ -50,7 +50,7 @@ if ($text) {
             if ($section) {
                 $fileName = $section->entry[1]->side[1]->ibox->pron->attributes()->url;
                 $telegram->sendVoice([
-                    'chat_id' => 'CHAT_ID',
+                    'chat_id' => $chat_id,
                     'voice' => 'https://dict.leo.org/media/audio/' . $fileName . '.ogg',
                 ]);
             }
