@@ -28,19 +28,27 @@ if ($text) {
         if ($html) {
             $section = $html->sectionlist->section[0];
             if ($section) {
-                $i = 0;
+                $i = 1;
                 foreach ($section->entry as $entry) {
                     if ($i++ > 3) break;
                     $reply = '';
+                    $entryAttributes = $entry->side[0]->ibox->flecttab->attributes();
 
                     $n = $entry->side[0]->repr->small->i->m->t;
                     foreach ($entry->side[0]->words->word as $word) {
                         $reply .= "<b>" . $word . "</b>\n\n";
 
-                        if ($word->attributes()->implicit_mf) {
-                            $reply .= "Род: " . $genders[$word->attributes()->implicit_mf->__toString()] . "\n\n";
-                        } else {
-                            $reply .= "Грамматическое число: " . $n . "\n\n";
+                        switch ($entryAttributes->stemType->__toString()) {
+                            case 'noun':
+                                if ($word->attributes()->implicit_mf) {
+                                    $reply .= "Род: " . $genders[$word->attributes()->implicit_mf->__toString()] . "\n\n";
+                                } else {
+                                    $reply .= "Грамматическое число: " . $n . "\n\n";
+                                }
+                                break;
+                            case 'verb':
+                                $reply .= getIndikativ($entryAttributes->url->__toString());
+                                break;
                         }
                     }
 
@@ -59,4 +67,17 @@ if ($text) {
             }
         }
     }
+}
+
+function getIndikativ($url) {
+    $result = '';
+    $html = simplexml_load_file('https://dict.leo.org/dictQuery/m-vocab/rude/stemming.xml' . $url . '&onlyLoc=result');
+
+    if ($html) {
+        foreach ($html->flectiontable->verbtab->mood[0]->tense[0]->case as $case) {
+            $result = $case->verb->__toString();
+        }
+    }
+
+    return $result;
 }
