@@ -34,7 +34,6 @@ if ($text) {
                     $reply = '';
                     $entryAttributes = $entry->side[0]->ibox->flecttab->attributes();
 
-                    $n = $entry->side[0]->repr->small->i->m->t;
                     foreach ($entry->side[0]->words->word as $word) {
                         $reply .= "<b>" . $word . "</b>\n\n";
 
@@ -43,11 +42,17 @@ if ($text) {
                                 if ($word->attributes()->implicit_mf) {
                                     $reply .= "Род: " . $genders[$word->attributes()->implicit_mf->__toString()] . "\n\n";
                                 } else {
-                                    $reply .= "Грамматическое число: " . $n . "\n\n";
+                                    $reply .= "Грамматическое число: " . $entry->side[0]->repr->small->i->m->t . "\n\n";
                                 }
                                 break;
                             case 'verb':
-                                $reply .= getIndikativ($entryAttributes->url->__toString());
+                                $stemming = simplexml_load_file('https://dict.leo.org/dictQuery/m-vocab/rude/stemming.xml' . $entryAttributes->url->__toString() . '&onlyLoc=result');
+
+                                if ($stemming) {
+                                    foreach ($stemming->verbtab->mood[0]->tense[0]->case as $case) {
+                                        $reply .= $case->verb->__toString();
+                                    }
+                                }
                                 break;
                         }
                     }
@@ -67,17 +72,4 @@ if ($text) {
             }
         }
     }
-}
-
-function getIndikativ($url) {
-    $result = '';
-    $html = simplexml_load_file('https://dict.leo.org/dictQuery/m-vocab/rude/stemming.xml' . $url . '&onlyLoc=result');
-
-    if ($html) {
-        foreach ($html->verbtab->mood[0]->tense[0]->case as $case) {
-            $result = $case->verb->__toString();
-        }
-    }
-
-    return $result;
 }
