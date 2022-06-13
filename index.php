@@ -27,10 +27,12 @@ if ($text) {
         $html = simplexml_load_file('https://dict.leo.org/dictQuery/m-vocab/rude/query.xml?lp=rude&lang=ru&search=' . $text . '&side=both&order=basic&partial=show&sectLenMax=16&n=1&filtered=-1&trigger=');
         if ($html) {
             $section = $html->sectionlist->section[0];
+            $reply = '';
+
             if ($section) {
                 $i = 1;
+
                 foreach ($section->entry as $entry) {
-                    $reply = '';
                     $entryAttributes = $entry->side[1]->ibox->flecttab->attributes();
 
                     if ($entryAttributes) {
@@ -58,12 +60,13 @@ if ($text) {
                             }
                         }
 
-                        $telegram->sendMessage([ 'chat_id' => $chat_id, 'parse_mode' => 'HTML', 'text' => $reply ]);
                     }
                 }
             } else {
                 $telegram->sendMessage([ 'chat_id' => $chat_id, 'parse_mode' => 'HTML', 'text' => 'Булочка, ты опечаталась' ]);
             }
+
+            $telegram->sendMessage([ 'chat_id' => $chat_id, 'parse_mode' => 'HTML', 'text' => $reply ]);
 
             if ($section) {
                 $fileName = $section->entry[1]->side[1]->ibox->pron->attributes()->url;
