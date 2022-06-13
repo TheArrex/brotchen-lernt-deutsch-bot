@@ -50,8 +50,9 @@ if ($text) {
                                 break;
                             case 'verb':
                                 foreach ($entry->side[0]->words->word as $word) {
-                                    $reply .= "<b>" . $word . "</b>\n";
+                                    $reply .= "<b>" . $word . "</b> / ";
                                 }
+                                $reply .= "\n";
                                 break;
                         }
                     }
@@ -62,7 +63,7 @@ if ($text) {
 
                     if ($stemming) {
                         foreach ($stemming->verbtab->mood[0]->tense[0]->case as $case) {
-                            $reply .= $case->verb->var . "\n";
+                            $reply .= $case->verb->fix[0] . $case->verb->var . "\n";
                         }
                     }
                 }
