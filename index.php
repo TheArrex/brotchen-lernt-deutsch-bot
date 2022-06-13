@@ -27,8 +27,9 @@ if ($text) {
         $reply = '';
         $html = simplexml_load_file('https://dict.leo.org/dictQuery/m-vocab/rude/query.xml?lp=rude&lang=ru&search=' . $text . '&side=both&order=basic&partial=show&sectLenMax=16&n=1&filtered=-1&trigger=');
         if ($html) {
-            if ($html->sectionlist->section[0]) {
-                foreach ($html->sectionlist->section[0]->entry as $entry) {
+            $section = $html->sectionlist->section[0];
+            if ($section) {
+                foreach ($section->entry as $entry) {
                     $n = $entry->side[0]->repr->small->i->m->t;
                     foreach ($entry->side[0]->words->word as $word) {
                         $reply .= "<b>" . $word . "</b>\n\n";
@@ -45,6 +46,14 @@ if ($text) {
             }
 
             $telegram->sendMessage([ 'chat_id' => $chat_id, 'parse_mode' => 'HTML', 'text' => $reply ]);
+
+            if ($section) {
+                $fileName = $section->entry[1]->side[1]->ibox->pron->attributes()->url;
+                $telegram->sendVoice([
+                    'chat_id' => 'CHAT_ID',
+                    'voice' => 'https://dict.leo.org/media/audio/' . $fileName . '.ogg',
+                ]);
+            }
         }
     }
 }
