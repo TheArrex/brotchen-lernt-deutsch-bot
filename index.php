@@ -28,7 +28,9 @@ if ($text) {
         if ($html) {
             $section = $html->sectionlist->section[0];
             if ($section) {
-                foreach ($section->entry as $i => $entry) {
+                $i = 0;
+                foreach ($section->entry as $entry) {
+                    if ($i++ > 3) break;
                     $reply = '';
 
                     $n = $entry->side[0]->repr->small->i->m->t;
