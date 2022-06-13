@@ -30,11 +30,11 @@ if ($text) {
             if ($section) {
                 $i = 1;
                 foreach ($section->entry as $entry) {
-                    if ($i++ > 3) break;
                     $reply = '';
                     $entryAttributes = $entry->side[0]->ibox->flecttab->attributes();
 
                     if ($entryAttributes) {
+                        if ($i++ > 3) break;
                         foreach ($entry->side[0]->words->word as $word) {
                             $reply .= "<b>" . $word . "</b>\n\n";
 
@@ -47,7 +47,7 @@ if ($text) {
                                     }
                                     break;
                                 case 'verb':
-                                    $stemming = simplexml_load_file('https://dict.leo.org/dictQuery/m-vocab/rude/stemming.xml' . $entryAttributes->url->__toString() . '&onlyLoc=result');
+                                    $stemming = simplexml_load_file('https://dict.leo.org/dictQuery/m-vocab/rude/stemming.xml' . $entryAttributes->url . '&onlyLoc=result');
 
                                     if ($stemming) {
                                         foreach ($stemming->verbtab->mood[0]->tense[0]->case as $case) {
