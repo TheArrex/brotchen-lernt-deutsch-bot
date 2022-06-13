@@ -61,7 +61,7 @@ if ($text) {
                     $stemming = simplexml_load_file('https://dict.leo.org/dictQuery/m-vocab/rude/stemming.xml' . $section->entry[0]->side[1]->ibox->flecttab->attributes()->url . '&onlyLoc=result');
 
                     if ($stemming) {
-                        foreach ($stemming->verbtab->mood[0]->tense[0]->case as $case) {
+                        foreach ($stemming->flectiontable->verbtab->mood[0]->tense[0]->case as $case) {
                             $reply .= $case->verb->__toString() . "\n";
                         }
                     }
