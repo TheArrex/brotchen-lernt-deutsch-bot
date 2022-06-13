@@ -49,11 +49,15 @@ if ($text) {
                                 }
                                 break;
                             case 'verb':
+                                $length = count($entry->side[0]->words->word);
+                                $x = 1;
+
                                 foreach ($entry->side[0]->words->word as $key => $word) {
                                     $reply .= "<b>" . $word . "</b>";
-                                    if ($key === array_key_last($entry->side[0]->words->word)) {
+                                    if ($x !== $length) {
                                         $reply .= " / ";
                                     }
+                                    $x++;
                                 }
                                 $reply .= "\n";
                                 break;
