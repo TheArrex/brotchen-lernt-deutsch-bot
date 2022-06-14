@@ -32,40 +32,36 @@ if ($text) {
             if ($section) {
                 $i = 1;
                 foreach ($section->entry as $entry) {
-                    $entryAttributes = $entry->side[1]->ibox->flecttab->attributes();
+                    if ($i++ > 3) break;
+                    switch ($entry->info->category->attributes()->type->__toString()) {
+                        case 'noun':
+                            foreach ($entry->side[0]->words->word as $word) {
+                                $reply .= "<b>" . $word . "</b>\n";
 
-                    if ($entryAttributes) {
-                        if ($i++ > 3) break;
-                        switch ($entryAttributes->stemType->__toString()) {
-                            case 'noun':
-                                foreach ($entry->side[0]->words->word as $word) {
-                                    $reply .= "<b>" . $word . "</b>\n";
-
-                                    if ($word->attributes()->implicit_mf) {
-                                        $reply .= "род: " . $genders[$word->attributes()->implicit_mf->__toString()] . "\n\n";
-                                    } else {
-                                        $reply .= "грамматическое число: " . $entry->side[0]->repr->small->i->m->t . "\n\n";
-                                    }
+                                if ($word->attributes()->implicit_mf) {
+                                    $reply .= "род: " . $genders[$word->attributes()->implicit_mf->__toString()] . "\n\n";
+                                } else {
+                                    $reply .= "грамматическое число: " . $entry->side[0]->repr->small->i->m->t . "\n\n";
                                 }
-                                break;
-                            case 'verb':
-                                $length = count($entry->side[0]->words->word);
-                                $x = 1;
+                            }
+                            break;
+                        case 'verb':
+                            $length = count($entry->side[0]->words->word);
+                            $x = 1;
 
-                                foreach ($entry->side[0]->words->word as $key => $word) {
-                                    $reply .= "<b>" . $word . "</b>";
-                                    if ($x !== $length) {
-                                        $reply .= " / ";
-                                    }
-                                    $x++;
+                            foreach ($entry->side[0]->words->word as $key => $word) {
+                                $reply .= "<b>" . $word . "</b>";
+                                if ($x !== $length) {
+                                    $reply .= " / ";
                                 }
-                                $reply .= "\n";
-                                break;
-                        }
+                                $x++;
+                            }
+                            $reply .= "\n";
+                            break;
                     }
                 }
 
-                switch ($section->entry[0]->side[1]->ibox->flecttab->attributes()->stemType->__toString()) {
+                switch ($section->entry[0]->info->category->attributes()->type->__toString()) {
                     case 'noun':
                         $reply .= "<b>мн.ч.: " . $section->entry[0]->side[1]->repr->flecttabref->small . "</b>";
                         break;
