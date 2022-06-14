@@ -32,6 +32,7 @@ if ($text) {
             if ($section) {
                 $i = 1;
                 foreach ($section->entry as $entry) {
+                    if ($i++ > 3) break;
                     switch ($entry->info->category->attributes()->type->__toString()) {
                         case 'noun':
                             foreach ($entry->side[0]->words->word as $word) {
