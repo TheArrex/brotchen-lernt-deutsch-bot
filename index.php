@@ -66,6 +66,9 @@ if ($text) {
                 }
 
                 switch ($section->entry[0]->side[1]->ibox->flecttab->attributes()->stemType->__toString()) {
+                    case 'noun':
+                        $reply .= "<b>мн.ч.: " . $section->entry[0]->side[1]->repr->flecttabref->small . "</b>";
+                        break;
                     case 'verb':
                         $stemming = simplexml_load_file('https://dict.leo.org/dictQuery/m-vocab/rude/stemming.xml' . $section->entry[0]->side[1]->ibox->flecttab->attributes()->url . '&onlyLoc=result');
 
