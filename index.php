@@ -13,7 +13,7 @@ $genders = [
 $log = new Logger('name');
 $log->pushHandler(new StreamHandler('php://stderr', Logger::WARNING));
 
-$telegram = new Api('5578497960:AAERCgsXvpUoyDRSfhJ7tO_2WZ2CL3NVXDE');
+$telegram = new Api($_ENV['BOT_TOKEN']);
 $result = $telegram->getWebhookUpdates();
 
 $text = $result["message"]["text"];
@@ -61,22 +61,24 @@ if ($text) {
                                 }
                                 $reply .= "\n";
                                 break;
-                            default:
-                                $reply .= 'Я пока знаю только существительные и глаголы.';
-                                break;
                         }
                     }
                 }
 
-                if ($section->entry[0]->side[1]->ibox->flecttab->attributes()->stemType->__toString() == 'verb') {
-                    $stemming = simplexml_load_file('https://dict.leo.org/dictQuery/m-vocab/rude/stemming.xml' . $section->entry[0]->side[1]->ibox->flecttab->attributes()->url . '&onlyLoc=result');
+                switch ($section->entry[0]->side[1]->ibox->flecttab->attributes()->stemType->__toString()) {
+                    case 'verb':
+                        $stemming = simplexml_load_file('https://dict.leo.org/dictQuery/m-vocab/rude/stemming.xml' . $section->entry[0]->side[1]->ibox->flecttab->attributes()->url . '&onlyLoc=result');
 
-                    if ($stemming) {
-                        $reply .= "\n";
-                        foreach ($stemming->verbtab->mood[0]->tense[0]->case as $case) {
-                            $reply .= $case->verb->fix[0] . $case->verb->var . "\n";
+                        if ($stemming) {
+                            $reply .= "\n";
+                            foreach ($stemming->verbtab->mood[0]->tense[0]->case as $case) {
+                                $reply .= $case->verb->fix[0] . $case->verb->var . "\n";
+                            }
                         }
-                    }
+                        break;
+                    default:
+                        $reply .= 'Я пока знаю только существительные и глаголы.';
+                        break;
                 }
             } else {
                 $reply = 'Булочка, ты опечаталась';
